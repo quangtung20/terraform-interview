@@ -7,10 +7,11 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count             = length(var.public_subnet)
-  vpc_id            = aws_vpc.vpc.id
-  cidr_block        = var.public_subnet[count.index]
-  availability_zone = var.availability_zone[count.index]
+  count                   = length(var.public_subnet)
+  vpc_id                  = aws_vpc.vpc.id
+  map_public_ip_on_launch = true
+  cidr_block              = var.public_subnet[count.index]
+  availability_zone       = var.availability_zone[count.index]
   tags = {
     "Name" = "public-subnet"
   }

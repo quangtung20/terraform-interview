@@ -15,7 +15,7 @@ module "webserver" {
   instance_type     = "t2.micro"
   sg_name           = "demo-sg"
   vpc_id            = module.vpc.vpc_id
-  subnet_id         = module.vpc.subnet_id
+  subnet_id         = module.vpc.public_subnet[0].id
   port              = 8080
 }
 
@@ -25,8 +25,18 @@ module "sonar_server" {
   sg_name           = "sonar-sg"
   instance_type     = "t2.small"
   vpc_id            = module.vpc.vpc_id
-  subnet_id         = module.vpc.subnet_id
+  subnet_id         = module.vpc.public_subnet[0].id
   port              = 80
 }
 
+module "eks_sg" {
+  source = "./modules/sg_eks"
+  vpc_id = module.vpc.vpc_id
+}
 
+module "eks" {
+  source     = "./modules/eks"
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = [module.vpc.public_subnet[0].id, module.vpc.public_subnet[1].id]
+  sg_ids     = module.eks_sg.security_group_public
+}

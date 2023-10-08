@@ -19,7 +19,7 @@ resource "aws_security_group" "demo-sg" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description = "SHH access"
+    description = "SSH access"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -38,6 +38,14 @@ resource "aws_security_group" "demo-sg" {
     description = "App port"
     from_port   = var.port
     to_port     = var.port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "ECR port"
+    from_port   = 8096
+    to_port     = 8096
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
